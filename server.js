@@ -7,7 +7,7 @@ const path = require('path');
 const xml2js = require('xml2js');
 const app = express();
 const PORT = 3000;
-
+app.use(express.text({ type: 'application/xml' }));
 app.use(bodyParser.text({ type: 'application/xml' }));
 app.use(express.json())
 
@@ -44,27 +44,39 @@ app.get('/stays-cart', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'staysCart.html'));
 });
 
+const CONTACT_FORM_FILE = path.join(__dirname, 'contact', 'contactForm.xml');
+
 app.post('/contact-us/submitContactForm', (req, res) => {
     // we get raw xml from req body
     const xmlData = req.body; 
-
+    
     // checking if xmlData is defined and not empty
     if (!xmlData) {
         return res.status(400).send('No XML data received');
     }
-
-    // generating a unique filename
-    const uniqueId = uuidv4();
-    const filePath = `./contact/contactForm_${uniqueId}.xml`;
-
-    // saving the XML data to a file
-    fs.writeFile(filePath, xmlData, (err) => {
+    
+    // read the existing XML file or create a new one if it doesn't exist
+    let existingData = '';
+    try {
+        existingData = fs.readFileSync(CONTACT_FORM_FILE, 'utf8');
+    } catch (err) {
+        if (err.code !== 'ENOENT') {
+            console.error('Error reading XML file:', err);
+            return res.status(500).send('Failed to read XML file');
+        }
+    }
+    
+    // append the new XML data to the existing data
+    const finalData = existingData ? `${existingData}\n${xmlData}` : xmlData;
+    
+    // save the final XML data to the file
+    fs.writeFile(CONTACT_FORM_FILE, finalData, (err) => {
         if (err) {
             console.error('Error saving XML file:', err);
             return res.status(500).send('Failed to save XML file');
         }
-        console.log(`XML file saved successfully as ${filePath}`);
-        res.send(`XML data received and saved successfully as ${filePath}`);
+        console.log(`XML file saved successfully as ${CONTACT_FORM_FILE}`);
+        res.send(`XML data received and saved successfully`);
     });
 });
 

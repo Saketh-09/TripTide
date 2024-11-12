@@ -12,13 +12,13 @@ This is a Node.js and Express-based application developed to handle backend serv
 1. Clone the repository:
 
     ```bash
-    git clone <repository-url>
+    git clone git@github.com:Saketh-09/TripTide.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd <project-folder>
+    cd TripTide
     ```
 
 3. Install dependencies:

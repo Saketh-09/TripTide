@@ -1,0 +1,24 @@
+<ContactForm>
+				<FirstName>Sa</FirstName>
+				<LastName>Ke</LastName>
+				<Phone>(123) 123-1234</Phone>
+				<Email>a@g.c</Email>
+				<Gender>Male</Gender>
+				<Comment>1223321123321123312</Comment>
+			  </ContactForm>
+<ContactForm>
+				<FirstName>Saf</FirstName>
+				<LastName>Kef</LastName>
+				<Phone>(123) 123-1234</Phone>
+				<Email>a@g.c</Email>
+				<Gender>Male</Gender>
+				<Comment>1223321123321123312</Comment>
+			  </ContactForm>
+<ContactForm>
+				<FirstName>Saketh</FirstName>
+				<LastName>Annimalla</LastName>
+				<Phone>(123) 123-1234</Phone>
+				<Email>sxa230044@utdallas.edu</Email>
+				<Gender>Male</Gender>
+				<Comment>This is a good app</Comment>
+			  </ContactForm>
