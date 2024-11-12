@@ -690,7 +690,7 @@
     <arrival-date>2024-11-18</arrival-date>
     <departure-time>10:30</departure-time>
     <arrival-time>12:45</arrival-time>
-    <available-seats>167</available-seats>
+    <available-seats>163</available-seats>
     <price>251</price>
   </flight>
   <flight>
@@ -2098,7 +2098,7 @@
     <arrival-date>2024-11-18</arrival-date>
     <departure-time>07:45</departure-time>
     <arrival-time>10:00</arrival-time>
-    <available-seats>167</available-seats>
+    <available-seats>163</available-seats>
     <price>257</price>
   </flight>
   <flight>

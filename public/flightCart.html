@@ -32,14 +32,15 @@
 
     <div id="nav">
         <ul>
-            <li><a href="/index">Home</a></li>
-            <li><a href="/stays">Stays</a></li>
-            <li><a href="/flights">Flights</a></li>
-            <li><a href="/cars">Cars</a></li>
-            <li><a href="/cruises">Cruises</a></li>
-            <li><a href="/contact-us">Contact Us</a></li>
-            <li><a href="/flights-cart">Flights-Cart</a></li>
-            <li><a href="/stays-cart">Stays-Cart</a></li>
+            
+        <li><a href="/index">Home</a></li>
+        <li><a href="/stays">Stays</a></li>
+        <li><a href="/flights">Flights</a></li>
+        <li><a href="/cars">Cars</a></li>
+        <li><a href="/cruises">Cruises</a></li>
+        <li><a href="/flights-cart">Flights-Cart</a></li>
+        <li><a href="/stays-cart">Stays-Cart</a></li>
+        <li class="float-right"><a href="/contact-us">Contact Us</a></li>
         </ul>
     </div>
 
@@ -59,9 +60,9 @@
 			</div>
 
             <!-- Booking Buttons -->
-            <div id="booking_buttons">
+            <!-- <div id="booking_buttons">
                 <button id="bookFlightsButton" class="booking-button" style="display: none;" onclick="bookFlightsOnly()">Book Flight(s)</button>
-            </div>
+            </div> -->
             <div id="error_messages" style="color:red;"></div>
             <div id="booking_confirmation"></div>
         </div>
@@ -78,25 +79,25 @@
 			return 'BK' + Date.now(); 
 		}
 		
-		function completeBooking() {
-			var cartData = JSON.parse(localStorage.getItem('cartData'));
+		// function completeBooking() {
+		// 	var cartData = JSON.parse(localStorage.getItem('cartData'));
 
-			// generating booking numbers
-			cartData.flight.bookingNumber = generateBookingNumber();
-			if (cartData.returnFlight) {
-				cartData.returnFlight.bookingNumber = generateBookingNumber();
-			}
+		// 	// generating booking numbers
+		// 	cartData.flight.bookingNumber = generateBookingNumber();
+		// 	if (cartData.returnFlight) {
+		// 		cartData.returnFlight.bookingNumber = generateBookingNumber();
+		// 	}
 
-			// display booking confirmation
-			var confirmation = "<h3>Booking Confirmation</h3>";
-			confirmation += generateBookingConfirmation(cartData);
-			document.getElementById('booking_confirmation').innerHTML = confirmation;
+		// 	// display booking confirmation
+		// 	var confirmation = "<h3>Booking Confirmation</h3>";
+		// 	confirmation += generateBookingConfirmation(cartData);
+		// 	document.getElementById('booking_confirmation').innerHTML = confirmation;
 
-			saveBookingToFile(cartData);
+		// 	saveBookingToFile(cartData);
 
-			// clear cartData post saving
-			localStorage.removeItem('cartData');
-		}
+		// 	// clear cartData post saving
+		// 	localStorage.removeItem('cartData');
+		// }
 
 		function generateBookingConfirmation(cartData) {
 			var confirmationInfo = "";
@@ -135,51 +136,102 @@
 			document.getElementById('passengerFields').innerHTML = passengerFields;
 		}
 
-		function submitPassengerDetails() {
-			var form = document.getElementById('passengerForm');
-			var formData = new FormData(form);
+		// function submitPassengerDetails() {
+		// 	var form = document.getElementById('passengerForm');
+		// 	var formData = new FormData(form);
 
-			// getting cart data from localStorage
-			var cartData = JSON.parse(localStorage.getItem('cartData'));
-			var totalPassengers = cartData.passengers.adults + cartData.passengers.children + cartData.passengers.infants;
-			// alert(totalPassengers)
-			var passengers = [];
-			for (var i = 1; i <= totalPassengers; i++) {
-				var passenger = {
-					firstName: formData.get(`firstName${i}`),
-					lastName: formData.get(`lastName${i}`),
-					dob: formData.get(`dob${i}`),
-					ssn: formData.get(`ssn${i}`)
-				};
-				// alert(passenger.firstName)
-				passengers.push(passenger);
-			}
+		// 	// getting cart data from localStorage
+		// 	var cartData = JSON.parse(localStorage.getItem('cartData'));
+		// 	var totalPassengers = cartData.passengers.adults + cartData.passengers.children + cartData.passengers.infants;
+		// 	// alert(totalPassengers)
+		// 	var passengers = [];
+		// 	for (var i = 1; i <= totalPassengers; i++) {
+		// 		var passenger = {
+		// 			firstName: formData.get(`firstName${i}`),
+		// 			lastName: formData.get(`lastName${i}`),
+		// 			dob: formData.get(`dob${i}`),
+		// 			ssn: formData.get(`ssn${i}`)
+		// 		};
+		// 		// alert(passenger.firstName)
+		// 		passengers.push(passenger);
+		// 	}
 			
-			// saving passenger details to cartData
-			var cartData = JSON.parse(localStorage.getItem('cartData'));
-			cartData.passengerDetails = passengers;
-			// alert(JSON.stringify(cartData))
-			localStorage.setItem('cartData', JSON.stringify(cartData));
+		// 	// saving passenger details to cartData
+		// 	var cartData = JSON.parse(localStorage.getItem('cartData'));
+		// 	cartData.passengerDetails = passengers;
+		// 	// alert(JSON.stringify(cartData))
+		// 	localStorage.setItem('cartData', JSON.stringify(cartData));
 
-			// proceed to booking
-			completeBooking();
-			// prevent form submission
-			return false; 
-		}
+		// 	// proceed to booking
+		// 	completeBooking();
+		// 	// prevent form submission
+		// 	return false; 
+		// }
+		function submitPassengerDetails() {
+    var form = document.getElementById('passengerForm');
+    var formData = new FormData(form);
+
+    // Getting cart data from localStorage
+    var cartData = JSON.parse(localStorage.getItem('cartData'));
+    var totalPassengers = cartData.passengers.adults + cartData.passengers.children + cartData.passengers.infants;
+    var passengers = [];
+    
+    for (var i = 1; i <= totalPassengers; i++) {
+        var passenger = {
+            firstName: formData.get(`firstName${i}`),
+            lastName: formData.get(`lastName${i}`),
+            dob: formData.get(`dob${i}`),
+            ssn: formData.get(`ssn${i}`)
+        };
+        passengers.push(passenger);
+    }
+    
+    // Saving passenger details to cartData
+    cartData.passengerDetails = passengers;
+    localStorage.setItem('cartData', JSON.stringify(cartData));
+
+    // Complete the booking and hide the passenger form
+    completeBooking();
+    document.getElementById('passengerForm').style.display = 'none';
+
+    // Prevent form submission
+    return false;
+}
+
+function completeBooking() {
+    var cartData = JSON.parse(localStorage.getItem('cartData'));
+
+    // Generate booking numbers
+    cartData.flight.bookingNumber = generateBookingNumber();
+    if (cartData.returnFlight) {
+        cartData.returnFlight.bookingNumber = generateBookingNumber();
+    }
+
+    // Display booking confirmation
+    var confirmation = "<h3>Booking Confirmation</h3>";
+    confirmation += generateBookingConfirmation(cartData);
+    document.getElementById('booking_confirmation').innerHTML = confirmation;
+
+    saveBookingToFile(cartData);
+
+    // Clear cart data after saving
+    localStorage.removeItem('cartData');
+}
 
         function displayCart() {
-            var cartData = JSON.parse(localStorage.getItem('cartData'));
-            if (!cartData) {
-                document.getElementById('cart_info').innerHTML = "Your cart is empty.";
-                return;
-            }
-            var cart_info = "";
-            cart_info += "<h3>Flight Booking:</h3>";
-            cart_info += generateFlightBookingInfo(cartData);
-            document.getElementById('cart_info').innerHTML = cart_info;
-            document.getElementById('bookFlightsButton').style.display = 'inline-block';
-            
-        }
+			var cartData = JSON.parse(localStorage.getItem('cartData'));
+			if (!cartData) {
+				document.getElementById('cart_info').innerHTML = "Your cart is empty.";
+				return;
+			}
+			var cart_info = "";
+			cart_info += "<h3>Flight Booking:</h3>";
+			cart_info += generateFlightBookingInfo(cartData);
+			document.getElementById('cart_info').innerHTML = cart_info;
+
+			displayPassengerForm();
+		}
+
 
         // function to generate flight booking information
         function generateFlightBookingInfo(cartData) {

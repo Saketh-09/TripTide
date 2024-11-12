@@ -15,14 +15,15 @@
 
     <div id="nav">
         <ul>
-            <li><a href="/index">Home</a></li>
-            <li><a href="/stays">Stays</a></li>
-            <li><a href="/flights">Flights</a></li>
-            <li><a href="/cars">Cars</a></li>
-            <li><a href="/cruises">Cruises</a></li>
-            <li><a href="/contact-us">Contact Us</a></li>
-            <li><a href="/flights-cart">Flights-Cart</a></li>
-            <li><a href="/stays-cart">Stays-Cart</a></li>
+            
+        <li><a href="/index">Home</a></li>
+        <li><a href="/stays">Stays</a></li>
+        <li><a href="/flights">Flights</a></li>
+        <li><a href="/cars">Cars</a></li>
+        <li><a href="/cruises">Cruises</a></li>
+        <li><a href="/flights-cart">Flights-Cart</a></li>
+        <li><a href="/stays-cart">Stays-Cart</a></li>
+        <li style="margin-right: 0; margin-left: auto;"><a href="/contact-us">Contact Us</a></li>
         </ul>
     </div>
 
@@ -302,7 +303,7 @@
         }
 
         var flightData = JSON.parse(selectedOutboundFlight.value);
-		alert(flightData.flightId)
+		// alert(flightData.flightId)
         var cartData = {
             trip_type: trip_type,
             flight: flightData,

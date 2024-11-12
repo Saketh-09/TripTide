@@ -351,5 +351,121 @@
         "ssn": "12312123"
       }
     ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 167,
+      "price": 257,
+      "bookingNumber": "BK1731434758929"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-12",
+        "ssn": "12312123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 166,
+      "price": 257,
+      "bookingNumber": "BK1731434829819"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-12",
+        "ssn": "12312123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 165,
+      "price": 257,
+      "bookingNumber": "BK1731435060689"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-12",
+        "ssn": "12312123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 164,
+      "price": 257,
+      "bookingNumber": "BK1731435394307"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-12",
+        "ssn": "12312123"
+      }
+    ]
   }
 ]
