@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TripTide Destinations - Contact Us</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script src="script.js"></script>
+</head>
+<body onload="display_date_and_time()">
+
+    <div id="container">
+    <div id="header">
+        <h1>Contact Us</h1>
+        <div id="date-time"></div>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/flights">Flights</a></li>
+            <li><a href="/cars">Cars</a></li>
+            <li><a href="/cruises">Cruises</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/flights-cart">Flights-Cart</a></li>
+            <li><a href="/stays-cart">Stays-Cart</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="sidebar">
+            <div class="side-button"><button onclick="increase_font_size()">Increase Font Size</button></div>
+            <div class="side-button"><button onclick="decrease_font_size()">Decrease Font Size</button></div>
+            <div class="side-button"><button onclick="change_background_color()">Change Background Color</button></div>        
+            <h2>Ping us</h2>
+            <p>We'd love to get your feedback!</p>
+        </div>
+        <div id="main">
+            <h2>Send Us a Message</h2>
+            <form id="contactForm" onsubmit="return contact_form_validations()">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name"><br><br>
+
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name"><br><br>
+
+                <label for="phone">Phone Number:</label>
+				<input type="text" id="phone" name="phone" oninput="formatPhoneNumber(this)" maxlength="14" placeholder="(123) 456-7890" required><br><br>
+
+                <label>Gender:</label>
+                <input type="radio" id="male" name="gender" value="Male">
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="Female">
+                <label for="female">Female</label><br><br>
+
+                <label for="email">Email Address:</label>
+                <input type="text" id="email" name="email"><br><br>
+
+                <label for="comment">Comment:</label><br>
+                <textarea id="comment" name="comment" rows="5" cols="40"></textarea><br><br>
+
+                <input type="submit" value="Submit" class="submit">
+            </form>
+
+            <div id="error_messages" style="color:red;"></div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2024 CS6314.002 Saketh Annimalla - sxa230044, Prudhvi Gona - pxg230024, Group: 29</p>
+    </div>
+
+</div>
+    <script>
+        function contact_form_validations() {
+            var first_name = document.getElementById('first_name').value.trim();
+            var last_name = document.getElementById('last_name').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var comment = document.getElementById('comment').value.trim();
+            var gender = document.querySelector('input[name="gender"]:checked');
+
+            var error_messages = [];
+            if (!first_name) {
+                error_messages.push("First name cannot be empty.");
+            }
+            if (!last_name) {
+                error_messages.push("Last name cannot be empty.");
+            }
+            // Regex Pattern for First name and last name (only alphabetic & 1st char capital)
+            var name_pattern = /^[A-Z][a-zA-Z]*$/;
+            if (!name_pattern.test(first_name)) {
+                error_messages.push("First name should start with a capital letter and contain alphabetic characters only.");
+            }
+            if (!name_pattern.test(last_name)) {
+                error_messages.push("Last name should start with a capital letter and contain alphabetic characters only.");
+            }
+            if (first_name === last_name) {
+                error_messages.push("First name and last name cannot be the same.");
+            }
+
+            // Regex Pattern for Phone number ( ddd) ddd- dddd
+            var phone_pattern = /^\(\d{3}\) \d{3}-\d{4}$/;
+            if (!phone) {
+                error_messages.push("Phone number must not be empty.");
+            }
+            else if (!phone_pattern.test(phone)) {
+                error_messages.push("Phone number must be in the format (123) 456-7890.");
+            }
+
+            // Regex Pattern for Email
+            var email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email_pattern.test(email)) {
+                error_messages.push("Please enter a valid email address.");
+            }
+
+            // gender shouldn't be empty
+            if (!gender) {
+                error_messages.push("Please select your gender.");
+            }
+
+            // comment validation
+            if (comment.length < 10) {
+                error_messages.push("Comment must be at least 10 characters long.");
+            }
+
+            // show list of errors
+            var error_div = document.getElementById('error_messages');
+            error_div.innerHTML = '';
+            // prevent form submission for invalid input
+            if (error_messages.length > 0) {
+                var ul = document.createElement('ul');
+                for (var i = 0; i < error_messages.length; i++) {
+                    var li = document.createElement('li');
+                    li.textContent = error_messages[i];
+                    ul.appendChild(li);
+                }
+                error_div.appendChild(ul);
+                return false; 
+            } else {
+                alert("Form submitted successfully!");
+				const xmlData = convertDataToXML();  // Convert to XML
+                sendDataToServer(xmlData);           // Send XML to server
+                return false;
+            }
+        }
+		
+		function convertDataToXML() {
+			var first_name = document.getElementById('first_name').value.trim();
+			var last_name = document.getElementById('last_name').value.trim();
+			var phone = document.getElementById('phone').value.trim();
+			var email = document.getElementById('email').value.trim();
+			var comment = document.getElementById('comment').value.trim();
+			var gender = document.querySelector('input[name="gender"]:checked').value;
+
+			// Create XML structure
+			var xml = `
+			  <ContactForm>
+				<FirstName>${first_name}</FirstName>
+				<LastName>${last_name}</LastName>
+				<Phone>${phone}</Phone>
+				<Email>${email}</Email>
+				<Gender>${gender}</Gender>
+				<Comment>${comment}</Comment>
+			  </ContactForm>
+			`;
+
+			return xml.trim();
+		}
+		
+		function formatPhoneNumber(input) {
+			// Remove all non-numeric characters
+			const numbers = input.value.replace(/\D/g, '');
+
+			// Format based on the length of the input
+			if (numbers.length <= 3) {
+				input.value = `(${numbers}`;
+			} else if (numbers.length <= 6) {
+				input.value = `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
+			} else if (numbers.length <= 10) {
+				input.value = `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6)}`;
+			} else {
+				// Limit to 10 digits to prevent additional characters
+				input.value = `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
+			}
+		}
+
+
+		function sendDataToServer(xmlData) {
+			// Use Fetch API to send XML data to the server
+			fetch('/contact-us/submitContactForm', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/xml'
+				},
+				body: xmlData
+			})
+			.then(response => {
+				if (response.ok) {
+					alert("Data sent successfully!");
+				} else {
+					alert("Error in sending data to the server.");
+				}
+			})
+			.catch(error => {
+				console.error("Error:", error);
+				alert("An error occurred while sending data to the server.");
+			});
+		}
+
+    </script>
+
+</body>
+</html>

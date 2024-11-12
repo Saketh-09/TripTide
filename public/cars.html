@@ -1,0 +1,151 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>TripTide Destinations - Cars</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script src="script.js"></script>
+</head>
+<body onload="display_date_and_time()">
+
+    <div id="container">
+    <div id="header">
+        <h1>Rent a Car</h1>
+        <div id="date-time"></div>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/flights">Flights</a></li>
+            <li><a href="/cars">Cars</a></li>
+            <li><a href="/cruises">Cruises</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/flights-cart">Flights-Cart</a></li>
+            <li><a href="/stays-cart">Stays-Cart</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="sidebar">
+            <div class="side-button"><button onclick="increase_font_size()">Increase Font Size</button></div>
+            <div class="side-button"><button onclick="decrease_font_size()">Decrease Font Size</button></div>
+            <div class="side-button"><button onclick="change_background_color()">Change Background Color</button></div>
+            <h2>Available Car Types</h2>
+            <ul>
+                <li>Economy</li>
+                <li>SUV</li>
+                <li>Compact</li>
+                <li>Midsize</li>
+            </ul>
+        </div>
+        <div id="main">
+            <h2>Find Car Rental Deals</h2>
+            <form id="carForm">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city"><br><br>
+
+                <label for="car_type">Car Type:</label>
+                <input type="text" id="car_type" name="car_type"><br><br>
+
+                <label for="pickup_date">Pick-up Date:</label>
+                <input type="date" id="pickup_date" name="pickup_date"><br><br>
+
+                <label for="dropoff_date">Drop-off Date:</label>
+                <input type="date" id="dropoff_date" name="dropoff_date"><br><br>
+
+                <input type="button" value="Submit" class="submit" onclick="validateCarForm()">
+            </form>
+
+            <div id="error_messages" style="color:red;"></div>
+            <div id="carInfo"></div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2024 CS6314.002 Saketh Annimalla - sxa230044, Prudhvi Gona - pxg230024, Group: 29</p>
+    </div>
+
+    </div>
+    <script>
+        function validateCarForm() {
+            // Retrieve form values using DOM methods
+            var city = document.getElementById('city').value.trim();
+            var car_type = document.getElementById('car_type').value.trim();
+            var pickup_date = document.getElementById('pickup_date').value;
+            var dropoff_date = document.getElementById('dropoff_date').value;
+
+            var error_messages = [];
+
+            // Validate city (ensure it's not empty)
+            if (city === "") {
+                error_messages.push("Please enter the city.");
+            }
+
+            // Validate car type
+            var valid_car_types = ["economy", "suv", "compact", "midsize"];
+            if (!valid_car_types.includes(car_type.toLowerCase())) {
+                error_messages.push("Car type must be Economy, SUV, Compact, or Midsize.");
+            }
+
+            // Validate dates
+            var pickup = new Date(pickup_date);
+            var dropoff = new Date(dropoff_date);
+            var min_date = new Date('2024-09-01');
+            var max_date = new Date('2024-12-01');
+
+            if (pickup_date === "" || dropoff_date === "") {
+                error_messages.push("Please enter both pick-up and drop-off dates.");
+            } else if (isNaN(pickup) || isNaN(dropoff)) {
+                error_messages.push("Please enter valid pick-up and drop-off dates.");
+            } else {
+                if (pickup < min_date || pickup > max_date) {
+                    error_messages.push("Pick-up date must be between Sep 1, 2024, and Dec 1, 2024.");
+                }
+                if (dropoff < min_date || dropoff > max_date) {
+                    error_messages.push("Drop-off date must be between Sep 1, 2024, and Dec 1, 2024.");
+                }
+                if (dropoff <= pickup) {
+                    error_messages.push("Drop-off date must be after pick-up date.");
+                }
+            }
+
+            // Display errors or information using DOM methods
+            var error_div = document.getElementById('error_messages');
+            error_div.innerHTML = '';
+
+            var car_info_div = document.getElementById('carInfo');
+            car_info_div.innerHTML = '';
+
+            if (error_messages.length > 0) {
+                var ul = document.createElement('ul');
+                for (var i = 0; i < error_messages.length; i++) {
+                    var li = document.createElement('li');
+                    li.textContent = error_messages[i];
+                    ul.appendChild(li);
+                }
+                error_div.appendChild(ul);
+            } else {
+                // Display entered information
+                var info = document.createElement('div');
+                var city_p = document.createElement('p');
+                city_p.textContent = "City: " + city;
+                var car_type_p = document.createElement('p');
+                car_type_p.textContent = "Car Type: " + car_type.charAt(0).toUpperCase() + car_type.slice(1);
+                var pickup_p = document.createElement('p');
+                pickup_p.textContent = "Pick-up Date: " + pickup_date;
+                var dropoff_p = document.createElement('p');
+                dropoff_p.textContent = "Drop-off Date: " + dropoff_date;
+
+                info.appendChild(city_p);
+                info.appendChild(car_type_p);
+                info.appendChild(pickup_p);
+                info.appendChild(dropoff_p);
+
+                car_info_div.appendChild(info);
+            }
+        }
+    </script>
+
+</body>
+</html>

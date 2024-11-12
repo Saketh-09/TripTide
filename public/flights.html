@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TripTide Destinations - Flights</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script src="script.js"></script>
+</head>
+<body onload="display_date_and_time()">
+
+    <div id="container">
+    <div id="header">
+        <h1>Book Your Flight</h1>
+        <div id="date-time"></div>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/flights">Flights</a></li>
+            <li><a href="/cars">Cars</a></li>
+            <li><a href="/cruises">Cruises</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/flights-cart">Flights-Cart</a></li>
+            <li><a href="/stays-cart">Stays-Cart</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="sidebar">
+            <div class="side-button"><button onclick="increase_font_size()">Increase Font Size</button></div>
+            <div class="side-button"><button onclick="decrease_font_size()">Decrease Font Size</button></div>
+            <div class="side-button"><button onclick="change_background_color()">Change Background Color</button></div>           
+            <h2>Available Destinations</h2>
+            <ul>
+                <li>Houston</li>
+                <li>Dallas</li>
+                <li>Austin</li>
+                <li>San Antonio</li>
+                <li>Los Angeles</li>
+                <li>San Francisco</li>
+                <li>San Diego</li>
+                <li>Sacramento</li>
+            </ul>
+        </div>
+        <div id="main">
+            <h2>Find the Best Flight Deals</h2>
+            <form id="flightForm" onsubmit="return validateFlightForm()">
+                <label>Trip Type:</label>
+                <input type="radio" id="oneway" name="trip_type" value="oneway" checked>
+                <label for="oneway">One Way</label>
+                <input type="radio" id="roundtrip" name="trip_type" value="roundtrip">
+                <label for="roundtrip">Round Trip</label><br><br>
+
+                <label for="origin">Origin:</label>
+                <input type="text" id="origin" name="origin" required><br><br>
+
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" name="destination" required><br><br>
+
+                <label for="departure">Departure Date:</label>
+                <input type="date" id="departure" name="departure" required><br><br>
+
+                <div id="returnDateSection" style="display:none;">
+                    <label for="returnDate">Return Date:</label>
+                    <input type="date" id="returnDate" name="returnDate"><br><br>
+                </div>
+
+                <label>Passengers:</label>
+                <img src="passenger.png" alt="Passengers" id="passengerIcon" style="width:24px;height:24px;cursor:pointer;">
+                <div id="passengerForm" style="display:none;">
+                    <label for="adults">Adults:</label>
+                    <input type="number" id="adults" name="adults" min="1" max="4" value="1"><br><br>
+
+                    <label for="children">Children:</label>
+                    <input type="number" id="children" name="children" min="0" max="4" value="0"><br><br>
+
+                    <label for="infants">Infants:</label>
+                    <input type="number" id="infants" name="infants" min="0" max="4" value="0"><br><br>
+                </div>
+
+                <input type="submit" value="Search" class="submit">
+            </form>
+
+            <div id="error_messages" style="color:red;"></div>
+            <div id="flight_info"></div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2024 CS6314.002 Saketh Annimalla - sxa230044, Prudhvi Gona - pxg230024, Group: 29</p>
+    </div>
+</div>
+    <script>
+        // show/hide return date based on trip type
+        document.getElementsByName('trip_type').forEach(function(elem) {
+            elem.addEventListener('change', function() {
+                if (this.value === 'roundtrip') {
+                    document.getElementById('returnDateSection').style.display = 'block';
+                } else {
+                    document.getElementById('returnDateSection').style.display = 'none';
+                }
+            });
+        });
+
+        // show/hide passenger form
+        document.getElementById('passengerIcon').addEventListener('click', function() {
+            var passengerForm = document.getElementById('passengerForm');
+            if (passengerForm.style.display === 'none' || passengerForm.style.display === '') {
+                passengerForm.style.display = 'block';
+            } else {
+                passengerForm.style.display = 'none';
+            }
+        });
+
+        function validateFlightForm() {
+            var trip_type = document.querySelector('input[name="trip_type"]:checked').value;
+            var origin = document.getElementById('origin').value.trim();
+            var destination = document.getElementById('destination').value.trim();
+            var departure = document.getElementById('departure').value;
+            var returnDate = document.getElementById('returnDate').value;
+            var adults = parseInt(document.getElementById('adults').value);
+            var children = parseInt(document.getElementById('children').value);
+            var infants = parseInt(document.getElementById('infants').value);
+
+            var error_messages = [];
+
+            // validating origin and destination
+            var city_pattern = /^(Houston|Dallas|Austin|San Antonio|Los Angeles|San Francisco|San Diego|Sacramento)$/i;
+            if (!city_pattern.test(origin)) {
+                error_messages.push("Origin must be a city in Texas or California (Houston, Dallas, Austin, San Antonio, Los Angeles, San Francisco, San Diego, Sacramento).");
+            }
+            if (!city_pattern.test(destination)) {
+                error_messages.push("Destination must be a city in Texas or California (Houston, Dallas, Austin, San Antonio, Los Angeles, San Francisco, San Diego, Sacramento).");
+            }
+            if (destination.toLowerCase() === origin.toLowerCase()){
+                error_messages.push("Origin cannot be the same as destination.");
+            }
+
+            // validating departure date
+            var departure_date = new Date(departure);
+            var min_date = new Date('2024-09-01');
+            var max_date = new Date('2024-12-01');
+
+            if (isNaN(departure_date)) {
+                error_messages.push("Please enter a valid departure date.");
+            } else {
+                if (departure_date < min_date || departure_date > max_date) {
+                    error_messages.push("Departure date must be between Sep 1, 2024, and Dec 1, 2024.");
+                }
+            }
+
+            // validating return date if round trip
+            if (trip_type === 'roundtrip') {
+                var returnDateValue = new Date(returnDate);
+                if (isNaN(returnDateValue)) {
+                    error_messages.push("Please enter a valid return date.");
+                } else {
+                    if (returnDateValue < min_date || returnDateValue > max_date) {
+                        error_messages.push("Return date must be between Sep 1, 2024, and Dec 1, 2024.");
+                    }
+                    if (returnDateValue <= departure_date) {
+                        error_messages.push("Return date must be after departure date.");
+                    }
+                }
+            }
+
+            // validating number of passengers
+            if (adults > 4 || children > 4 || infants > 4) {
+                error_messages.push("Number of passengers in each category cannot be more than 4.");
+            }
+            if (adults < 1 && children < 1 && infants <1) {
+                error_messages.push("At least one passenger must be selected.");
+            }
+
+            // Display errors or proceed to display available flights
+            if (error_messages.length > 0) {
+                document.getElementById('error_messages').innerHTML = error_messages.join("<br>");
+                document.getElementById('flight_info').innerHTML = "";
+                return false;
+            } else {
+                // Clear previous messages
+                document.getElementById('error_messages').innerHTML = "";
+                fetchAvailableFlights(trip_type, origin, destination, departure, returnDate, adults, children, infants);
+                return false; // Prevent form submission
+            }
+        }
+
+       function fetchAvailableFlights(trip_type, origin, destination, departure, returnDate, adults, children, infants) {
+			var passengers = adults + children + infants;
+			var flight_info = "";
+
+			// getting outbound flights
+			var availableFlights = getFlightsFromServer(origin, destination, departure, passengers);
+			flight_info += "<h3>Available Outbound Flights:</h3>";
+			if (availableFlights.length > 0) {
+				flight_info += "<table border='1'><tr><th>Select</th><th>Flight ID</th><th>Origin</th><th>Destination</th><th>Departure Date</th><th>Departure Time</th><th>Available Seats</th><th>Price</th></tr>";
+				availableFlights.forEach(function(flight) {
+					flight_info += "<tr>";
+					flight_info += "<td><input type='radio' name='selectedOutboundFlight' value='" + JSON.stringify(flight) + "'></td>";
+					flight_info += "<td>" + flight.flightId + "</td>";
+					flight_info += "<td>" + flight.origin + "</td>";
+					flight_info += "<td>" + flight.destination + "</td>";
+					flight_info += "<td>" + flight.departureDate + "</td>";
+					flight_info += "<td>" + flight.departureTime + "</td>";
+					flight_info += "<td>" + flight.availableSeats + "</td>";
+					flight_info += "<td>$" + flight.price.toFixed(2) + "</td>";
+					flight_info += "</tr>";
+				});
+				flight_info += "</table>";
+			} else {
+				flight_info += "No available outbound flights on the requested departure date.<br>";
+			}
+
+			// if its round trip, we fetch return flights
+			if (trip_type === 'roundtrip') {
+				var returnFlights = getFlightsFromServer(destination, origin, returnDate, passengers);
+				flight_info += "<h3>Available Return Flights:</h3>";
+				if (returnFlights.length > 0) {
+					flight_info += "<table border='1'><tr><th>Select</th><th>Flight ID</th><th>Origin</th><th>Destination</th><th>Departure Date</th><th>Departure Time</th><th>Available Seats</th><th>Price</th></tr>";
+					returnFlights.forEach(function(flight) {
+						flight_info += "<tr>";
+						flight_info += "<td><input type='radio' name='selectedReturnFlight' value='" + JSON.stringify(flight) + "'></td>";
+						flight_info += "<td>" + flight.flightId + "</td>";
+						flight_info += "<td>" + flight.origin + "</td>";
+						flight_info += "<td>" + flight.destination + "</td>";
+						flight_info += "<td>" + flight.departureDate + "</td>";
+						flight_info += "<td>" + flight.departureTime + "</td>";
+						flight_info += "<td>" + flight.availableSeats + "</td>";
+						flight_info += "<td>$" + flight.price.toFixed(2) + "</td>";
+						flight_info += "</tr>";
+					});
+					flight_info += "</table>";
+				} else {
+					flight_info += "No available return flights on the requested return date.<br>";
+				}
+			}
+
+			// display "Add to Cart" button only if flights are available
+			if ((trip_type != 'roundtrip' && availableFlights.length > 0) || (trip_type === 'roundtrip' && availableFlights.length > 0 && returnFlights && returnFlights.length > 0)) {
+				flight_info += "<div class=\"side-button\"><button onclick='addToCart()' class='side-button'>Add to Cart</button></div>";
+			}
+
+			document.getElementById('flight_info').innerHTML = flight_info;
+        }
+
+		
+        // getting the XML data from the server
+		var allFlights = [];
+
+		fetch('/flights/data')
+			.then(response => response.text())  // getting XML as plain text
+			.then(data => {
+				// parse XML data
+				const parser = new DOMParser();
+				const xmlDoc = parser.parseFromString(data, "application/xml");
+
+				// convert XML to array of flight objects
+				const flightNodes = xmlDoc.getElementsByTagName("flight");
+				allFlights = Array.from(flightNodes).map(flight => {
+					return {
+						flightId: flight.getElementsByTagName("flight-id")[0].textContent,
+						origin: flight.getElementsByTagName("origin")[0].textContent,
+						destination: flight.getElementsByTagName("destination")[0].textContent,
+						departureDate: flight.getElementsByTagName("departure-date")[0].textContent,
+						arrivalDate: flight.getElementsByTagName("arrival-date")[0].textContent,
+						departureTime: flight.getElementsByTagName("departure-time")[0].textContent,
+						arrivalTime: flight.getElementsByTagName("arrival-time")[0].textContent,
+						availableSeats: parseInt(flight.getElementsByTagName("available-seats")[0].textContent),
+						price: parseFloat(flight.getElementsByTagName("price")[0].textContent)
+					};
+				});
+				console.log("Flights loaded:", allFlights);
+			})
+			.catch(error => console.error('Error fetching flight data:', error));
+
+		// simulated function to get flights from server
+		function getFlightsFromServer(origin, destination, departure, passengers) {
+			// ensure `allFlights` is populated before filtering
+			if (allFlights.length === 0) {
+				console.warn("No flights available or not yet loaded.");
+				return [];
+			}
+			// filter flights based on criteria
+			return allFlights.filter(function(flight) {
+				return flight.origin.toLowerCase() === origin.toLowerCase() &&
+					   flight.destination.toLowerCase() === destination.toLowerCase() &&
+					   flight.departureDate === departure &&
+					   flight.availableSeats >= passengers;
+			});
+		}
+
+
+       // function to add selected flights to cart
+    function addToCart() {
+        var trip_type = document.querySelector('input[name="trip_type"]:checked').value;
+
+        var selectedOutboundFlight = document.querySelector('input[name="selectedOutboundFlight"]:checked');
+        if (!selectedOutboundFlight) {
+            alert("Please select an outbound flight to add to cart.");
+            return;
+        }
+
+        var flightData = JSON.parse(selectedOutboundFlight.value);
+		alert(flightData.flightId)
+        var cartData = {
+            trip_type: trip_type,
+            flight: flightData,
+            passengers: {
+                adults: parseInt(document.getElementById('adults').value),
+                children: parseInt(document.getElementById('children').value),
+                infants: parseInt(document.getElementById('infants').value)
+            },
+			returnFlight:""
+        };
+
+        if (trip_type === 'roundtrip') {
+            var selectedReturnFlight = document.querySelector('input[name="selectedReturnFlight"]:checked');
+            if (!selectedReturnFlight) {
+                alert("Please select a return flight to add to cart.");
+                return;
+            }
+            var returnFlightData = JSON.parse(selectedReturnFlight.value);
+            cartData.returnFlight = returnFlightData;
+        }
+
+        // save cart data to localStorage
+        localStorage.setItem('cartData', JSON.stringify(cartData));
+        window.location.href = 'flightCart.html';
+    }
+
+    function addReturnFlightToCart() {
+        var selectedReturnFlight = document.querySelector('input[name="selectedReturnFlight"]:checked');
+        if (!selectedReturnFlight) {
+            alert("Please select a return flight to add to cart.");
+            return;
+        }
+
+        var returnFlightData = JSON.parse(selectedReturnFlight.value);
+        cartData.returnFlight = returnFlightData;
+
+        localStorage.setItem('cartData', JSON.stringify(cartData));
+        window.location.href = 'flightCart.html';
+    }
+	
+	
+
+    </script>
+
+</body>
+</html>

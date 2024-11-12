@@ -1,0 +1,315 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>TripTide Destinations - Cart</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script src="script.js"></script>
+    <style>
+        /* Simple styles for the booking buttons */
+        .booking-button {
+            background-color: #008CBA; /* Blue background */
+            color: white; /* White text */
+            padding: 10px 20px; /* Some padding */
+            margin: 10px 5px; /* Some margin */
+            border: none; /* Remove borders */
+            cursor: pointer; /* Pointer cursor on hover */
+            border-radius: 5px; /* Rounded corners */
+            font-size: 16px; /* Increase font size */
+        }
+        
+        .booking-button:hover {
+            background-color: #006F8E; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body onload="">
+
+    <div id="container">
+    <div id="header">
+        <h1>Flights Cart</h1>
+        <div id="date-time"></div>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/flights">Flights</a></li>
+            <li><a href="/cars">Cars</a></li>
+            <li><a href="/cruises">Cruises</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/flights-cart">Flights-Cart</a></li>
+            <li><a href="/stays-cart">Stays-Cart</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+		<div id="sidebar">
+            <div class="side-button"><button onclick="increase_font_size()">Increase Font Size</button></div>
+            <div class="side-button"><button onclick="decrease_font_size()">Decrease Font Size</button></div>
+            <div class="side-button"><button onclick="change_background_color()">Change Background Color</button></div>
+        </div>
+        <div id="main">
+            <h2>Review Your Cart</h2>
+            <div id="cart_info"></div>
+			<div id="passengerDetails">
+				<form id="passengerForm" onsubmit="return submitPassengerDetails()">
+					<div id="passengerFields"></div>
+				</form>
+			</div>
+
+            <!-- Booking Buttons -->
+            <div id="booking_buttons">
+                <button id="bookFlightsButton" class="booking-button" style="display: none;" onclick="bookFlightsOnly()">Book Flight(s)</button>
+            </div>
+            <div id="error_messages" style="color:red;"></div>
+            <div id="booking_confirmation"></div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2024 CS6314.002 Saketh Annimalla - sxa230044, Prudhvi Gona - pxg230024, Group: 29</p>
+    </div>
+    </div>
+
+    <script>
+		
+		function generateBookingNumber() {
+			return 'BK' + Date.now(); 
+		}
+		
+		function completeBooking() {
+			var cartData = JSON.parse(localStorage.getItem('cartData'));
+
+			// generating booking numbers
+			cartData.flight.bookingNumber = generateBookingNumber();
+			if (cartData.returnFlight) {
+				cartData.returnFlight.bookingNumber = generateBookingNumber();
+			}
+
+			// display booking confirmation
+			var confirmation = "<h3>Booking Confirmation</h3>";
+			confirmation += generateBookingConfirmation(cartData);
+			document.getElementById('booking_confirmation').innerHTML = confirmation;
+
+			saveBookingToFile(cartData);
+
+			// clear cartData post saving
+			localStorage.removeItem('cartData');
+		}
+
+		function generateBookingConfirmation(cartData) {
+			var confirmationInfo = "";
+
+			confirmationInfo += "<h4>Departing Flight Booking Number: " + cartData.flight.bookingNumber + "</h4>";
+			confirmationInfo += generateFlightInfoTable(cartData.flight, 'Departing Flight');
+
+			if (cartData.returnFlight) {
+				confirmationInfo += "<h4>Returning Flight Booking Number: " + cartData.returnFlight.bookingNumber + "</h4>";
+				confirmationInfo += generateFlightInfoTable(cartData.returnFlight, 'Returning Flight');
+			}
+
+			confirmationInfo += "<h4>Passengers:</h4><ul>";
+			cartData.passengerDetails.forEach(function(passenger) {
+				confirmationInfo += "<li>SSN: " + passenger.ssn + ", Name: " + passenger.firstName + " " + passenger.lastName + ", DOB: " + passenger.dob + "</li>";
+			});
+			confirmationInfo += "</ul>";
+
+			return confirmationInfo;
+		}
+
+
+		function displayPassengerForm() {
+			var cartData = JSON.parse(localStorage.getItem('cartData'));
+			var totalPassengers = cartData.passengers.adults + cartData.passengers.children + cartData.passengers.infants;
+			var passengerFields = '';
+			for (var i = 1; i <= totalPassengers; i++) {
+				passengerFields += `<h3>Enter Passenger Details:</h3>`;
+				passengerFields += `<h4>Passenger ${i}</h4>`;
+				passengerFields += `<label>First Name:</label><input type="text" name="firstName${i}" required><br>`;
+				passengerFields += `<label>Last Name:</label><input type="text" name="lastName${i}" required><br>`;
+				passengerFields += `<label>Date of Birth:</label><input type="date" name="dob${i}" required><br>`;
+				passengerFields += `<label>SSN:</label><input type="text" name="ssn${i}" required><br><br>`;
+				passengerFields +=	`<input type="submit" value="Confirm Booking" class="booking-button">`;
+			}
+			document.getElementById('passengerFields').innerHTML = passengerFields;
+		}
+
+		function submitPassengerDetails() {
+			var form = document.getElementById('passengerForm');
+			var formData = new FormData(form);
+
+			// getting cart data from localStorage
+			var cartData = JSON.parse(localStorage.getItem('cartData'));
+			var totalPassengers = cartData.passengers.adults + cartData.passengers.children + cartData.passengers.infants;
+			// alert(totalPassengers)
+			var passengers = [];
+			for (var i = 1; i <= totalPassengers; i++) {
+				var passenger = {
+					firstName: formData.get(`firstName${i}`),
+					lastName: formData.get(`lastName${i}`),
+					dob: formData.get(`dob${i}`),
+					ssn: formData.get(`ssn${i}`)
+				};
+				// alert(passenger.firstName)
+				passengers.push(passenger);
+			}
+			
+			// saving passenger details to cartData
+			var cartData = JSON.parse(localStorage.getItem('cartData'));
+			cartData.passengerDetails = passengers;
+			// alert(JSON.stringify(cartData))
+			localStorage.setItem('cartData', JSON.stringify(cartData));
+
+			// proceed to booking
+			completeBooking();
+			// prevent form submission
+			return false; 
+		}
+
+        function displayCart() {
+            var cartData = JSON.parse(localStorage.getItem('cartData'));
+            if (!cartData) {
+                document.getElementById('cart_info').innerHTML = "Your cart is empty.";
+                return;
+            }
+            var cart_info = "";
+            cart_info += "<h3>Flight Booking:</h3>";
+            cart_info += generateFlightBookingInfo(cartData);
+            document.getElementById('cart_info').innerHTML = cart_info;
+            document.getElementById('bookFlightsButton').style.display = 'inline-block';
+            
+        }
+
+        // function to generate flight booking information
+        function generateFlightBookingInfo(cartData) {
+            var flightInfo = "";
+            var trip_type = cartData.trip_type;
+            var passengers = cartData.passengers;
+            var totalPrice = calculateFlightTotalPrice(cartData);
+
+            flightInfo += generateFlightInfoTable(cartData.flight, 'Departing Flight');
+
+            if (trip_type === 'roundtrip' && cartData.returnFlight) {
+                flightInfo += generateFlightInfoTable(cartData.returnFlight, 'Returning Flight');
+            }
+
+            flightInfo += "<h4>Passengers:</h4>";
+            flightInfo += "Adults: " + passengers.adults + ", Children: " + passengers.children + ", Infants: " + passengers.infants + "<br>";
+            flightInfo += "<h4>Total Flight Price: $" + totalPrice.toFixed(2) + "</h4>";
+
+            return flightInfo;
+        }
+
+        // Flight booking functions remain the same as before
+        function generateFlightInfoTable(flight, title) {
+            var flight_info = "<h4>" + title + "</h4>";
+            flight_info += "<table border='1'><tr><th>Flight ID</th><th>Origin</th><th>Destination</th><th>Departure Date</th><th>Arrival Date</th><th>Departure Time</th><th>Arrival Time</th></tr>";
+            flight_info += "<tr>";
+            flight_info += "<td>" + flight.flightId + "</td>";
+            flight_info += "<td>" + flight.origin + "</td>";
+            flight_info += "<td>" + flight.destination + "</td>";
+            flight_info += "<td>" + flight.departureDate + "</td>";
+            flight_info += "<td>" + flight.arrivalDate + "</td>";
+            flight_info += "<td>" + flight.departureTime + "</td>";
+            flight_info += "<td>" + flight.arrivalTime + "</td>";
+            flight_info += "</tr></table>";
+            return flight_info;
+        }
+
+        function calculateFlightTotalPrice(cartData) {
+            var adults = cartData.passengers.adults;
+            var children = cartData.passengers.children;
+            var infants = cartData.passengers.infants;
+
+            var flightPrice = cartData.flight.price;
+            var totalPrice = (adults * flightPrice) + (children * flightPrice * 0.7) + (infants * flightPrice * 0.1);
+
+            if (cartData.trip_type === 'roundtrip' && cartData.returnFlight) {
+                var returnFlightPrice = cartData.returnFlight.price;
+                totalPrice += (adults * returnFlightPrice) + (children * returnFlightPrice * 0.7) + (infants * returnFlightPrice * 0.1);
+            }
+
+            return totalPrice;
+        }
+
+        function bookFlightsOnly(skipClearingCart) {
+            // simulate flight booking
+            console.log("Flight(s) booked.");
+            if (!skipClearingCart) {
+                var cartData = JSON.parse(localStorage.getItem('cartData'));
+                delete cartData.flight;
+                delete cartData.trip_type;
+                delete cartData.returnFlight;
+                delete cartData.passengers;
+                localStorage.setItem('cartData', JSON.stringify(cartData));
+            }
+            document.getElementById('booking_confirmation').innerHTML += "<p>Flight(s) booked successfully.</p>";
+            // hide flight booking button after booking
+            document.getElementById('bookFlightsButton').style.display = 'none';
+        }
+		
+		function saveBookingToFile(cartData) {
+    // saving booking data to server in file bookings.json
+			fetch('/flights/saveBooking', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(cartData)
+			})
+			.then(response => response.json())
+			.then(data => {
+				console.log(data.message);
+
+				// updating available seats
+				updateAvailableSeats(cartData);
+    })
+    .catch(error => console.error('Error saving booking:', error));
+}
+
+	function updateAvailableSeats(cartData) {
+		var totalPassengers = cartData.passengers.adults + cartData.passengers.children + cartData.passengers.infants;
+
+		// update outbound flight
+		fetch('/flights/updateSeats', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				flightId: cartData.flight.flightId,
+				seatsToReduce: totalPassengers
+			})
+		})
+		.then(response => response.json())
+		.then(data => {
+			console.log(data.message);
+
+			// if its roundtrip, we update return flight
+			if (cartData.returnFlight) {
+				fetch('/api/updateSeats', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						flightId: cartData.returnFlight.flightId,
+						seatsToReduce: totalPassengers
+					})
+				})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data.message);
+				})
+				.catch(error => console.error('Error updating return flight seats:', error));
+			}
+		})
+		.catch(error => console.error('Error updating seats:', error));
+	}
+		displayCart()
+		displayPassengerForm()
+    </script>
+
+</body>
+</html>

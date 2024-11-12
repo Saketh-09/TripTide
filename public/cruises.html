@@ -1,0 +1,163 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>TripTide Destinations - Cruises</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body onload="display_date_and_time()">
+
+    <div id="container">
+    <div id="header">
+        <h1>Book a Cruise</h1>
+        <div id="date-time"></div>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/flights">Flights</a></li>
+            <li><a href="/cars">Cars</a></li>
+            <li><a href="/cruises">Cruises</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/flights-cart">Flights-Cart</a></li>
+            <li><a href="/stays-cart">Stays-Cart</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="sidebar">
+            <div class="side-button"><button onclick="increase_font_size()">Increase Font Size</button></div>
+            <div class="side-button"><button onclick="decrease_font_size()">Decrease Font Size</button></div>
+            <div class="side-button"><button onclick="change_background_color()">Change Background Color</button></div>            
+            <h2>Operated Destinations</h2>
+            <ul>
+                <li>Europe</li>
+                <li>Alaska</li>
+                <li>Bahamas</li>
+                <li>Mexico</li>
+            </ul>
+        </div>
+        <div id="main">
+            <h2>Find the Perfect Cruise within Operated Destinations</h2>
+            <form id="cruiseForm">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" name="destination"><br><br>
+
+                <label for="departing_between">Departing Between:</label>
+                <input type="date" id="departing_between" name="departing_between"><br><br>
+
+                <label for="min_duration">Minimum Duration (Days):</label>
+                <input type="number" id="min_duration" name="min_duration" min="3"><br><br>
+
+                <label for="max_duration">Maximum Duration (Days):</label>
+                <input type="number" id="max_duration" name="max_duration" max="10"><br><br>
+
+                <label>Guests per Room:</label><br>
+                <label for="adults">Adults:</label>
+                <input type="number" id="adults" name="adults" min="1" max="2" value="1"><br><br>
+
+                <label for="children">Children:</label>
+                <input type="number" id="children" name="children" min="0" max="2" value="0"><br><br>
+
+                <label for="infants">Infants:</label>
+                <input type="number" id="infants" name="infants" min="0" value="0"><br><br>
+
+                <input type="button" value="Submit" id="submitBtn" class="submit">
+            </form>
+
+            <div id="error_messages" style="color:red;"></div>
+            <div id="cruiseInfo"></div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2024 CS6314.002 Saketh Annimalla - sxa230044, Prudhvi Gona - pxg230024, Group: 29</p>
+    </div>
+</div>
+    <script>
+        $(document).ready(function() {
+            $('#submitBtn').click(function() {
+                // Retrieve form values using jQuery
+                var destination = $('#destination').val().trim();
+                var departing_between = $('#departing_between').val();
+                var min_duration = parseInt($('#min_duration').val());
+                var max_duration = parseInt($('#max_duration').val());
+                var adults = parseInt($('#adults').val());
+                var children = parseInt($('#children').val());
+                var infants = parseInt($('#infants').val());
+
+                var error_messages = [];
+
+                // Validating destination
+                var validDestinations = ["Alaska", "Bahamas", "Europe", "Mexico"];
+                if (!validDestinations.includes(destination)) {
+                    error_messages.push("Destination must be Alaska, Bahamas, Europe, or Mexico.");
+                }
+
+                // Validating departing date
+                var departingDate = new Date(departing_between);
+                var min_date = new Date('2024-09-01');
+                var max_date = new Date('2024-12-01');
+
+                if (!departing_between) {
+                    error_messages.push("Please enter a departing date.");
+                } else if (isNaN(departingDate)) {
+                    error_messages.push("Please enter a valid departing date.");
+                } else {
+                    if (departingDate < min_date || departingDate > max_date) {
+                        error_messages.push("Departing date must be between Sep 1, 2024, and Dec 1, 2024.");
+                    }
+                }
+
+                // Validating duration
+                if (isNaN(min_duration) || isNaN(max_duration)) {
+                    error_messages.push("Please enter valid minimum and maximum durations.");
+                } else {
+                    if (min_duration < 3) {
+                        error_messages.push("Minimum duration cannot be less than 3 days.");
+                    }
+                    if (max_duration > 10) {
+                        error_messages.push("Maximum duration cannot be greater than 10 days.");
+                    }
+                    if (max_duration < min_duration) {
+                        error_messages.push("Maximum duration cannot be less than minimum duration.");
+                    }
+                }
+
+                // Validating guests per room
+                if (adults < 1) {
+                    error_messages.push("At least one adult must be present per room.");
+                }
+                if (adults + children > 2) {
+                    error_messages.push("Number of guests per room cannot exceed 2 (excluding infants).");
+                }
+
+                // Display errors or information using jQuery
+                $('#error_messages').html('');
+                $('#cruiseInfo').html('');
+
+                if (error_messages.length > 0) {
+                    var errorList = '<ul>';
+                    $.each(error_messages, function(index, message) {
+                        errorList += '<li>' + message + '</li>';
+                    });
+                    errorList += '</ul>';
+                    $('#error_messages').html(errorList);
+                } else {
+                    var cruiseInfo = "<h3>Your Cruise Details:</h3>" +
+                                     "Destination: " + destination + "<br>" +
+                                     "Departing Date: " + departing_between + "<br>" +
+                                     "Duration: " + min_duration + " - " + max_duration + " days<br>" +
+                                     "Guests per Room - Adults: " + adults + ", Children: " + children + ", Infants: " + infants;
+                    $('#cruiseInfo').html(cruiseInfo);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

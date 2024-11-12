@@ -1,0 +1,355 @@
+[
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0010",
+      "origin": "Houston",
+      "destination": "San Francisco",
+      "departureDate": "2024-09-14",
+      "arrivalDate": "2024-09-14",
+      "departureTime": "18:15",
+      "arrivalTime": "20:15",
+      "availableSeats": 104,
+      "price": 282,
+      "bookingNumber": "BK1731047131128"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": []
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0026",
+      "origin": "Houston",
+      "destination": "Sacramento",
+      "departureDate": "2024-09-14",
+      "arrivalDate": "2024-09-14",
+      "departureTime": "17:00",
+      "arrivalTime": "19:30",
+      "availableSeats": 165,
+      "price": 278,
+      "bookingNumber": "BK1731047927408"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": []
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0026",
+      "origin": "Houston",
+      "destination": "Sacramento",
+      "departureDate": "2024-09-14",
+      "arrivalDate": "2024-09-14",
+      "departureTime": "17:00",
+      "arrivalTime": "19:30",
+      "availableSeats": 164,
+      "price": 278,
+      "bookingNumber": "BK1731048179519"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": []
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0026",
+      "origin": "Houston",
+      "destination": "Sacramento",
+      "departureDate": "2024-09-14",
+      "arrivalDate": "2024-09-14",
+      "departureTime": "17:00",
+      "arrivalTime": "19:30",
+      "availableSeats": 163,
+      "price": 278,
+      "bookingNumber": "BK1731048350502"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 1,
+      "infants": 1
+    },
+    "returnFlight": "",
+    "passengerDetails": []
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0010",
+      "origin": "Houston",
+      "destination": "San Francisco",
+      "departureDate": "2024-09-14",
+      "arrivalDate": "2024-09-14",
+      "departureTime": "18:15",
+      "arrivalTime": "20:15",
+      "availableSeats": 103,
+      "price": 282,
+      "bookingNumber": "BK1731048491186"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": []
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0010",
+      "origin": "Houston",
+      "destination": "San Francisco",
+      "departureDate": "2024-09-14",
+      "arrivalDate": "2024-09-14",
+      "departureTime": "18:15",
+      "arrivalTime": "20:15",
+      "availableSeats": 102,
+      "price": 282,
+      "bookingNumber": "BK1731049274444"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Prudhvi",
+        "lastName": "Gona",
+        "dob": "2024-11-21",
+        "ssn": "677588"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0128",
+      "origin": "Sacramento",
+      "destination": "San Antonio",
+      "departureDate": "2024-12-01",
+      "arrivalDate": "2024-12-01",
+      "departureTime": "18:45",
+      "arrivalTime": "21:00",
+      "availableSeats": 117,
+      "price": 222,
+      "bookingNumber": "BK1731096992635"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "sa",
+        "lastName": "ds",
+        "dob": "2024-11-08",
+        "ssn": "123123123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0127",
+      "origin": "Sacramento",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "18:45",
+      "arrivalTime": "21:15",
+      "availableSeats": 170,
+      "price": 219,
+      "bookingNumber": "BK1731383382547"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-11",
+        "ssn": "123123123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 172,
+      "price": 257,
+      "bookingNumber": "BK1731390177644"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-11",
+        "ssn": "123123123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 171,
+      "price": 257,
+      "bookingNumber": "BK1731390349844"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-11",
+        "ssn": "12312123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 170,
+      "price": 257,
+      "bookingNumber": "BK1731391007758"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-11",
+        "ssn": "12312123"
+      }
+    ]
+  },
+  {
+    "trip_type": "roundtrip",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 169,
+      "price": 257,
+      "bookingNumber": "BK1731391087028"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": {
+      "flightId": "FL0112",
+      "origin": "San Antonio",
+      "destination": "San Francisco",
+      "departureDate": "2024-12-01",
+      "arrivalDate": "2024-12-01",
+      "departureTime": "10:45",
+      "arrivalTime": "12:45",
+      "availableSeats": 169,
+      "price": 282,
+      "bookingNumber": "BK1731391087028"
+    },
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-11",
+        "ssn": "12312123"
+      }
+    ]
+  },
+  {
+    "trip_type": "oneway",
+    "flight": {
+      "flightId": "FL0063",
+      "origin": "San Francisco",
+      "destination": "San Antonio",
+      "departureDate": "2024-11-18",
+      "arrivalDate": "2024-11-18",
+      "departureTime": "07:45",
+      "arrivalTime": "10:00",
+      "availableSeats": 168,
+      "price": 257,
+      "bookingNumber": "BK1731392492174"
+    },
+    "passengers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "returnFlight": "",
+    "passengerDetails": [
+      {
+        "firstName": "Saketh",
+        "lastName": "Annimalla",
+        "dob": "2024-11-12",
+        "ssn": "12312123"
+      }
+    ]
+  }
+]

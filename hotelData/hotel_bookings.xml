@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Booking>
+  <hotel>
+    <hotel-id>H0004</hotel-id>
+    <hotel-name>Ocean Breeze Hotel</hotel-name>
+    <city>Houston</city>
+    <available-rooms>2</available-rooms>
+    <nightlyRates>
+      <date>2024-11-13</date>
+      <price-per-night>152.49</price-per-night>
+    </nightlyRates>
+    <nightlyRates>
+      <date>2024-11-14</date>
+      <price-per-night>150.39</price-per-night>
+    </nightlyRates>
+  </hotel>
+  <searchDetails>
+    <city>Houston</city>
+    <checkin>2024-11-13</checkin>
+    <checkout>2024-11-15</checkout>
+    <adults>1</adults>
+    <children>0</children>
+    <infants>0</infants>
+    <numRooms>1</numRooms>
+  </searchDetails>
+</Booking>
+<?xml version="1.0" encoding="UTF-8"?>
+<Booking>
+  <hotel>
+    <hotel-id>H0005</hotel-id>
+    <hotel-name>City Center Suites</hotel-name>
+    <city>Dallas</city>
+    <available-rooms>3</available-rooms>
+    <nightlyRates>
+      <date>2024-11-11</date>
+      <price-per-night>167.82</price-per-night>
+    </nightlyRates>
+  </hotel>
+  <searchDetails>
+    <city>Dallas</city>
+    <checkin>2024-11-11</checkin>
+    <checkout>2024-11-12</checkout>
+    <adults>1</adults>
+    <children>0</children>
+    <infants>0</infants>
+    <numRooms>1</numRooms>
+  </searchDetails>
+</Booking>
+<?xml version="1.0" encoding="UTF-8"?>
+<Booking>
+  <hotel>
+    <hotel-id>H0005</hotel-id>
+    <hotel-name>City Center Suites</hotel-name>
+    <city>Dallas</city>
+    <available-rooms>38</available-rooms>
+    <nightlyRates>
+      <date>2024-11-12</date>
+      <price-per-night>189.57</price-per-night>
+    </nightlyRates>
+  </hotel>
+  <searchDetails>
+    <city>Dallas</city>
+    <checkin>2024-11-12</checkin>
+    <checkout>2024-11-13</checkout>
+    <adults>1</adults>
+    <children>0</children>
+    <infants>0</infants>
+    <numRooms>1</numRooms>
+  </searchDetails>
+</Booking>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TripTide Destinations - Stays</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script src="script.js"></script>
+</head>
+<body onload="display_date_and_time()">
+
+    <div id="container">
+    <div id="header">
+        <h1>Book Your Stay</h1>
+        <div id="date-time"></div>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/flights">Flights</a></li>
+            <li><a href="/cars">Cars</a></li>
+            <li><a href="/cruises">Cruises</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/flights-cart">Flights-Cart</a></li>
+            <li><a href="/stays-cart">Stays-Cart</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="sidebar">
+                <div class="side-button"><button onclick="increase_font_size()">Increase Font Size</button></div>
+                <div class="side-button"><button onclick="decrease_font_size()">Decrease Font Size</button></div>
+                <div class="side-button"><button onclick="change_background_color()">Change Background Color</button></div>
+            <h2>Available Destinations</h2>
+            <ul>
+                <li>Houston</li>
+                <li>Dallas</li>
+                <li>Austin</li>
+                <li>San Antonio</li>
+                <li>Los Angeles</li>
+                <li>San Francisco</li>
+                <li>San Diego</li>
+                <li>Sacramento</li>
+            </ul>
+        </div>
+        <div id="main">
+            <h2>Find the Best Hotels</h2>
+            <form id="staysForm" onsubmit="return validateStaysForm()">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required><br><br>
+
+                <label for="checkin">Check-in Date:</label>
+                <input type="date" id="checkin" name="checkin" required><br><br>
+
+                <label for="checkout">Check-out Date:</label>
+                <input type="date" id="checkout" name="checkout" required><br><br>
+
+                <label>Guests per Room:</label><br>
+                <label for="adults">Adults:</label>
+                <input type="number" id="adults" name="adults" min="1" max="2" value="1" required><br><br>
+
+                <label for="children">Children:</label>
+                <input type="number" id="children" name="children" min="0" max="2" value="0" required><br><br>
+
+                <label for="infants">Infants:</label>
+                <input type="number" id="infants" name="infants" min="0" value="0" required><br><br>
+
+                <input type="submit" value="Search" class="submit">
+            </form>
+
+            <div id="error_messages" style="color:red;"></div>
+            <div id="stayInfo"></div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2024 CS6314.002 Saketh Annimalla - sxa230044, Prudhvi Gona - pxg230024, Group: 29</p>
+    </div>
+
+</div>
+    <script>
+        function validateStaysForm() {
+				var city = document.getElementById('city').value.trim();
+				var checkin = document.getElementById('checkin').value;
+				var checkout = document.getElementById('checkout').value;
+				var adults = parseInt(document.getElementById('adults').value);
+				var children = parseInt(document.getElementById('children').value);
+				var infants = parseInt(document.getElementById('infants').value);
+
+				var error_messages = [];
+
+				// Validating city
+				var valid_destinations = ["Houston", "Dallas", "Austin", "San Antonio", "Los Angeles", "San Francisco", "San Diego", "Sacramento"];
+				if (!valid_destinations.includes(city)) {
+					error_messages.push("City must be a city in Texas or California (Houston, Dallas, Austin, San Antonio, Los Angeles, San Francisco, San Diego, Sacramento).");
+				}
+
+				// Validating dates
+				var checkinDate = new Date(checkin);
+				var checkoutDate = new Date(checkout);
+				var min_date = new Date('2024-09-01');
+				var max_date = new Date('2024-12-01');
+
+				if (isNaN(checkinDate) || isNaN(checkoutDate)) {
+					error_messages.push("Please enter valid check-in and check-out dates.");
+				} else {
+					if (checkinDate < min_date || checkinDate > max_date) {
+						error_messages.push("Check-in date must be between Sep 1, 2024, and Dec 1, 2024.");
+					}
+					if (checkoutDate < min_date || checkoutDate > max_date) {
+						error_messages.push("Check-out date must be between Sep 1, 2024, and Dec 1, 2024.");
+					}
+					if (checkoutDate <= checkinDate) {
+						error_messages.push("Check-out date must be after check-in date.");
+					}
+				}
+
+				// Validating guests per room
+				if (adults < 1) {
+					error_messages.push("At least one adult must be present per room.");
+				}
+				if (adults + children > 2) {
+					error_messages.push("Number of guests per room cannot exceed 2 (excluding infants).");
+				}
+
+				if (error_messages.length > 0) {
+					document.getElementById('error_messages').innerHTML = error_messages.join("<br>");
+					document.getElementById('stayInfo').innerHTML = "";
+					return false;
+				} else {
+					document.getElementById('error_messages').innerHTML = "";
+					// Calculate number of rooms needed
+					var totalGuests = adults + children;
+					var numRooms = Math.ceil(totalGuests / 2);
+
+					// Prepare search criteria
+					var searchCriteria = {
+						city: city,
+						checkin: checkin,
+						checkout: checkout,
+						adults: adults,
+						children: children,
+						infants: infants,
+						numRooms: numRooms
+					};
+
+					// Send request to the server
+					fetch('/stays/getAvailableHotels', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(searchCriteria)
+					})
+					.then(response => response.json())
+					.then(data => {
+						displayAvailableHotels(data, searchCriteria);
+					})
+					.catch(error => {
+						console.error('Error fetching available hotels:', error);
+						document.getElementById('stayInfo').innerHTML = "<p>Error fetching available hotels. Please try again later.</p>";
+					});
+					// preventing form submission
+					return false; 
+			}
+	}
+	
+	function displayAvailableHotels(availableHotels, searchCriteria) {
+			var stayInfo = "<h3>Your Search Details:</h3>";
+			stayInfo += "City: " + searchCriteria.city + "<br>" +
+						"Check-in Date: " + searchCriteria.checkin + "<br>" +
+						"Check-out Date: " + searchCriteria.checkout + "<br>" +
+						"Adults per Room: " + searchCriteria.adults + "<br>" +
+						"Children per Room: " + searchCriteria.children + "<br>" +
+						"Infants per Room: " + searchCriteria.infants + "<br>" +
+						"Number of Rooms Needed: " + searchCriteria.numRooms + "<br><br>";
+
+			if (availableHotels.length > 0) {
+				stayInfo += "<h3>Available Hotels:</h3>";
+				stayInfo += "<table border='1'><tr><th>Select</th><th>Hotel ID</th><th>Hotel Name</th><th>City</th><th>Average Price per Night</th><th>Available Rooms</th></tr>";
+				availableHotels.forEach(function(hotel) {
+					// calculate average price per night
+					var totalNightlyRate = hotel.nightlyRates.reduce((sum, rate) => sum + rate['price-per-night'], 0);
+					var avgPricePerNight = totalNightlyRate / hotel.nightlyRates.length;
+
+					stayInfo += "<tr>";
+					stayInfo += "<td><input type='radio' name='selectedHotel' value='" + encodeURIComponent(JSON.stringify(hotel)) + "'></td>";
+					stayInfo += "<td>" + hotel['hotel-id'] + "</td>";
+					stayInfo += "<td>" + hotel['hotel-name'] + "</td>";
+					stayInfo += "<td>" + hotel.city + "</td>";
+					stayInfo += "<td>$" + avgPricePerNight.toFixed(2) + "</td>";
+					stayInfo += "<td>" + hotel['available-rooms'] + "</td>";
+					stayInfo += "</tr>";
+				});
+				stayInfo += "</table><br>";
+				stayInfo += "<div class=\"side-button\"><button onclick='addToCart(" + JSON.stringify(searchCriteria) + ")'>Add to Cart</button></div>";
+			} else {
+				stayInfo += "<p>No available hotels in " + searchCriteria.city + " that can accommodate your request.</p>";
+			}
+
+			document.getElementById('stayInfo').innerHTML = stayInfo;
+	}
+
+
+
+        // simulated function to get available hotels from a JSON file
+        function getAvailableHotels(city, numRooms) {
+            // simulated hotel data
+            var hotels = [
+                { hotel_id: 'H1001', hotel_name: 'Grand Texas Hotel', city: 'Houston', available_rooms: 10, price_per_night: 150 },
+                { hotel_id: 'H1002', hotel_name: 'Dallas Comfort Inn', city: 'Dallas', available_rooms: 5, price_per_night: 120 },
+                { hotel_id: 'H1003', hotel_name: 'Austin Luxury Suites', city: 'Austin', available_rooms: 8, price_per_night: 200 },
+                { hotel_id: 'H1004', hotel_name: 'San Antonio Riverwalk Hotel', city: 'San Antonio', available_rooms: 7, price_per_night: 180 },
+                { hotel_id: 'H1005', hotel_name: 'LA Downtown Hotel', city: 'Los Angeles', available_rooms: 12, price_per_night: 220 },
+                { hotel_id: 'H1006', hotel_name: 'San Francisco Bay Inn', city: 'San Francisco', available_rooms: 6, price_per_night: 250 },
+                { hotel_id: 'H1007', hotel_name: 'San Diego Beach Resort', city: 'San Diego', available_rooms: 9, price_per_night: 190 },
+                { hotel_id: 'H1008', hotel_name: 'Sacramento Grand Hotel', city: 'Sacramento', available_rooms: 4, price_per_night: 140 }
+            ];
+
+            // filter hotels based on city and available rooms
+            return hotels.filter(function(hotel) {
+                return hotel.city.toLowerCase() === city.toLowerCase() && hotel.available_rooms >= numRooms;
+            });
+        }
+
+      function addToCart(searchCriteria) {
+			var selectedHotelInput = document.querySelector('input[name="selectedHotel"]:checked');
+			if (!selectedHotelInput) {
+				alert("Please select a hotel to add to cart.");
+				return;
+			}
+
+			var hotelData = JSON.parse(decodeURIComponent(selectedHotelInput.value));
+
+			// save booking data to localStorage
+			var cartData = JSON.parse(localStorage.getItem('cartData')) || {};
+			cartData.hotelBooking = {
+				hotel: hotelData,
+				searchDetails: searchCriteria
+			};
+
+			localStorage.setItem('cartData', JSON.stringify(cartData));
+			window.location.href = 'staysCart.html';
+}
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TripTide Destinations - Cart</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <style>
+        .booking-button {
+            background-color: #008CBA;
+            color: white; 
+            padding: 10px 20px; 
+            margin: 10px 5px; 
+            border: none; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            font-size: 16px; 
+        }
+        
+        .booking-button:hover {
+            background-color: #006F8E; 
+        }
+    </style>
+</head>
+<body onload="displayCart()">
+
+    <div id="container">
+    <div id="header">
+        <h1>Hotels Cart</h1>
+        <div id="date-time"></div>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/flights">Flights</a></li>
+            <li><a href="/cars">Cars</a></li>
+            <li><a href="/cruises">Cruises</a></li>
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/flights-cart">Flights-Cart</a></li>
+            <li><a href="/stays-cart">Stays-Cart</a></li>
+        </ul>
+    </div>
+
+        <div id="content">
+            
+        <div id="sidebar">
+            <div class="side-button"><button onclick="increase_font_size()">Increase Font Size</button></div>
+            <div class="side-button"><button onclick="decrease_font_size()">Decrease Font Size</button></div>
+            <div class="side-button"><button onclick="change_background_color()">Change Background Color</button></div>
+        </div>
+            <div id="main">
+                <h2>Review Your Cart</h2>
+                <div id="cart_info"></div>
+                <div id="booking_buttons">
+                    <button id="bookHotelButton" class="booking-button" style="display: none;" onclick="bookHotel()">Book Hotel</button>
+                </div>
+                <div id="booking_confirmation"></div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <p>&copy; 2024 CS6314.002 Saketh Annimalla - sxa230044, Prudhvi Gona - pxg230024, Group: 29</p>
+        </div>
+        <script>
+            function displayCart() {
+                // we're using localStorage to get items in cart
+                var cartData = JSON.parse(localStorage.getItem('cartData'));
+                if (!cartData) {
+                    document.getElementById('cart_info').innerHTML = "Your cart is empty.";
+                    return;
+                }
+
+                var cart_info = "";
+
+                if (cartData.hotelBooking) {
+                    cart_info += "<h3>Hotel Booking:</h3>";
+                    cart_info += generateHotelBookingInfo(cartData);
+                    document.getElementById('bookHotelButton').style.display = 'inline-block';
+                }
+
+                document.getElementById('cart_info').innerHTML = cart_info;
+            }
+
+            // function to generate hotel booking information
+            function generateHotelBookingInfo(cartData) {
+					var hotelData = cartData.hotelBooking;
+					var hotel = hotelData.hotel;
+					var searchDetails = hotelData.searchDetails;
+
+					var numRooms = searchDetails.numRooms;
+					var nightlyRates = hotel.nightlyRates;
+
+					// calculating total price
+					var totalPricePerRoom = nightlyRates.reduce((sum, rate) => sum + rate['price-per-night'], 0);
+					var totalPrice = totalPricePerRoom * numRooms;
+
+					var hotelInfo = "<table border='1'><tr><th>Hotel ID</th><th>Hotel Name</th><th>City</th></tr>";
+					hotelInfo += "<tr>";
+					hotelInfo += "<td>" + hotel['hotel-id'] + "</td>";
+					hotelInfo += "<td>" + hotel['hotel-name'] + "</td>";
+					hotelInfo += "<td>" + hotel.city + "</td>";
+					hotelInfo += "</tr></table><br>";
+
+					hotelInfo += "<h4>Stay Details:</h4>";
+					hotelInfo += "Check-in Date: " + searchDetails.checkin + "<br>";
+					hotelInfo += "Check-out Date: " + searchDetails.checkout + "<br>";
+					hotelInfo += "Number of Nights: " + nightlyRates.length + "<br>";
+					hotelInfo += "Number of Rooms: " + numRooms + "<br>";
+					hotelInfo += "Guests per Category: Adults: " + searchDetails.adults + ", Children: " + searchDetails.children + ", Infants: " + searchDetails.infants + "<br><br>";
+
+					hotelInfo += "<h4>Nightly Rates:</h4>";
+					hotelInfo += "<table border='1'><tr><th>Date</th><th>Price per Night</th></tr>";
+					nightlyRates.forEach(rate => {
+						hotelInfo += "<tr>";
+						hotelInfo += "<td>" + rate.date + "</td>";
+						hotelInfo += "<td>$" + rate['price-per-night'].toFixed(2) + "</td>";
+						hotelInfo += "</tr>";
+					});
+					hotelInfo += "</table><br>";
+
+					hotelInfo += "<h4>Total Price:</h4>";
+					hotelInfo += "Total Price per Room: $" + totalPricePerRoom.toFixed(2) + "<br>";
+					hotelInfo += "Total Price for " + numRooms + " Room(s): $" + totalPrice.toFixed(2) + "<br>";
+
+					return hotelInfo;
+			}
+
+
+            function calculateNights(checkin, checkout) {
+                var checkinDate = new Date(checkin);
+                var checkoutDate = new Date(checkout);
+                var timeDiff = checkoutDate.getTime() - checkinDate.getTime();
+                var nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                return nights;
+            }
+
+            function bookHotel() {
+                var cartData = JSON.parse(localStorage.getItem('cartData'));
+                if (!cartData || !cartData.hotelBooking) {
+                    alert("No hotel booking information found.");
+                    return;
+                }
+
+                // sending booking data to the server to save in XML and update available rooms
+                fetch('/stays/bookHotel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cartData.hotelBooking)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    document.getElementById('booking_confirmation').innerHTML = "<p>Hotel booked successfully!</p>";
+                    document.getElementById('bookHotelButton').style.display = 'none';
+                    // after saving, removing hotel booking from cart
+                    delete cartData.hotelBooking;
+                    localStorage.setItem('cartData', JSON.stringify(cartData));
+                })
+                .catch(error => console.error('Error booking hotel:', error));
+            }
+        </script>
+
+    </div>
+
+</body>
+</html>
